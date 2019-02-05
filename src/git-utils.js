@@ -1,4 +1,8 @@
 const execa = require('execa')
+const {
+  getGithubUrlFromRemoteOrigin,
+  getGitRepoFromRemoteOrigin,
+} = require('./utils')
 
 const latestTag = () =>
   execa.stdout('git', ['describe', '--abbrev=0', '--tags'])
@@ -129,3 +133,34 @@ exports.commitLogFromRevision = revision =>
   execa.stdout('git', ['log', '--format=%s %h', `${revision}..HEAD`])
 
 exports.push = () => execa('git', ['push', '--follow-tags'])
+
+exports.getRemoteOrigin = async () => {
+  try {
+    const {stdout: remoteOrigin} = await execa('git', [
+      'remote',
+      'get-url',
+      'origin',
+    ])
+    return remoteOrigin
+  } catch (error) {
+    throw error
+  }
+}
+
+exports.getRemoteRepoName = async () => {
+  try {
+    const remoteOrigin = await exports.getRemoteOrigin()
+    return getGitRepoFromRemoteOrigin(remoteOrigin)
+  } catch (error) {
+    throw error
+  }
+}
+
+exports.getGithubUrl = async () => {
+  try {
+    const remoteOrigin = await exports.getRemoteOrigin()
+    return getGithubUrlFromRemoteOrigin(remoteOrigin)
+  } catch (error) {
+    throw error
+  }
+}
