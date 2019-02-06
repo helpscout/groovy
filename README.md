@@ -50,4 +50,4 @@ new|n [options]     Create somethin' new
 
 Anytime you need help, just add `-h` at the end of your Groovy command 😎
 
-![Groovy baby, yea!](./images/groovy.gif)
+![Groovy baby, yea!](https://raw.githubusercontent.com/helpscout/groovy/master/images/groovy.gif)
