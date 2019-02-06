@@ -59,7 +59,16 @@ exports.createPullRequest = async (trelloUrl = '') => {
     },
     {
       title: 'Pushing to Remote',
-      task: () => git.pushCurrentBranch(),
+      task: () => {
+        return (async () => {
+          try {
+            await git.pushCurrentBranch()
+            return Promise.resolve()
+          } catch (err) {
+            return Promise.reject(err)
+          }
+        })()
+      },
     },
     {
       title: 'Creating Pull Request',
