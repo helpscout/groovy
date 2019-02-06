@@ -18,7 +18,6 @@
     "commander": "^2.19.0",
     "cosmiconfig": "^5.0.7",
     "execa": "^1.0.0",
-    "jsesc": "^2.5.2",
     "listr": "^0.14.3",
     "lodash": "^4.17.11",
     "pkg-up": "^2.0.0",
