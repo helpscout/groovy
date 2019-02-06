@@ -1,5 +1,5 @@
 const fs = require('fs')
-const open = require('open')
+const open = require('opn')
 
 exports.getHomeDir = () =>
   process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
