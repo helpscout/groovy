@@ -3,15 +3,32 @@
   "version": "0.0.1",
   "description": "A groovier development workflow experience",
   "main": "src/cli.js",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "gv": "src/cli.js",
     "groovy": "src/cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prestart": "zero prestart",
+    "start": "node src/index.js",
+    "test": "node src/index.js",
+    "format": "zero format",
+    "precommit": "zero pre-commit",
+    "release": "np"
   },
   "author": "Jon Quach <hello@jonquach.com> (https://jonquach.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helpscout/groovy.git"
+  },
   "license": "MIT",
+  "files": [
+    "src",
+    "LICENSE"
+  ],
   "dependencies": {
     "axios": "^0.18.0",
     "commander": "^2.19.0",
@@ -24,5 +41,9 @@
     "pkg-up": "^2.0.0",
     "prompts": "^2.0.1",
     "yargs": "^12.0.5"
+  },
+  "devDependencies": {
+    "@helpscout/zero": "^1.0.3",
+    "np": "^4.0.2"
   }
 }
