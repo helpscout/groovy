@@ -2,6 +2,7 @@
 const program = require('commander')
 const pkg = require('../package.json')
 const openGithub = require('./tasks/openGithub')
+const {createBranch} = require('./tasks/createBranch')
 const {createPullRequest} = require('./tasks/createPullRequest')
 const {openCoverageReport} = require('./tasks/openCoverageReport')
 const {configTrello} = require('./tasks/configTrello')
@@ -13,7 +14,7 @@ console.log()
 // Usage
 program.usage(`
 
-  🔮  Enso
+  🔮  Enso (v${pkg.version})
   enso <command>
 
   Example:
@@ -36,7 +37,7 @@ program
       return configTrello({key, token})
     }
 
-    // return config()
+    return config()
   })
 
 program
@@ -44,12 +45,12 @@ program
   .description('Opens project in a browser')
   .alias('o')
   .option('', 'Opens Github repo')
-  .option('coverage', 'Opens coverage report')
+  .option('coverage', 'Opens coverage report. (Alias: cov, cv)')
   .option('pr', 'Opens Github pull requests')
   .option('issues', 'Opens Github issues')
   .option('ci', 'Opens Travis CI')
   .action(command => {
-    if (command === 'coverage') {
+    if (['coverage', 'cov', 'cv'].some(w => w === command)) {
       return openCoverageReport()
     }
 
@@ -69,13 +70,18 @@ program
   })
 
 program
-  .command('create')
-  .alias('c')
+  .command('new')
+  .alias('n')
   .description('Executes a creation task')
-  .option('pr', 'Creates a pull request on Github')
-  .action((command, url) => {
-    if (command === 'pr') {
-      return createPullRequest(url)
+  .option('branch <name>', 'Creates a Git branch. (Alias: b)')
+  .option('pr <url>', 'Creates a pull request on Github. (Alias: prs, pulls)')
+  .action((command, arg) => {
+    if (['pr', 'prs', 'pulls'].some(w => w === command)) {
+      return createPullRequest(arg)
+    }
+
+    if (['b', 'branch'].some(w => w === command)) {
+      return createBranch(arg)
     }
   })
 
