@@ -1,11 +1,11 @@
-# 🔮 Enso
+# 🕺 Groovy
 
-> Delightful development workflow
+> A groovier development workflow experience
 
 ## Installation
 
 ```
-npm install -g enso-cli
+npm install -g @helpscout/groovy
 ```
 
 ## Usage
@@ -13,22 +13,22 @@ npm install -g enso-cli
 Run:
 
 ```
-enso
+gv
 ```
 
 ```
-🔮  Enso
-enso <command>
+🕺  Groovy
+gv <command>
 
 Example:
-enso open
+gv open
 
 Options:
   -V, --version     output the version number
   -h, --help        output usage information
 
 Commands:
-  config [options]  Configures Enso
+  config [options]  Configures gv
   open [options]    Opens project in a browser
   create [options]  Executes a creation task
   test              Runs tests via npm test
