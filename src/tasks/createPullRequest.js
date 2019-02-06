@@ -67,7 +67,7 @@ exports.createPullRequest = async (trelloUrl = '') => {
         return (async () => {
           const {defaultBranch} = ctx
 
-          let pullRequestUrl = git.createPullRequestUrl(defaultBranch)
+          let pullRequestUrl = await git.createPullRequestUrl(defaultBranch)
 
           if (trelloCard) {
             let {name, description} = trelloCard
@@ -82,7 +82,7 @@ exports.createPullRequest = async (trelloUrl = '') => {
             pullRequestUrl = `${pullRequestUrl}?title=${encodedTitle}&body=${encodedBody}`
           }
 
-          return openPage(`"${pullRequestUrl}"`)
+          return openPage(pullRequestUrl)
         })()
       },
     },
