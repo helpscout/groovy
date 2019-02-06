@@ -2,10 +2,10 @@ const Listr = require('listr')
 const execa = require('execa')
 const {get} = require('lodash')
 const prompts = require('prompts')
-const git = require('../git-utils')
+const git = require('../git')
 const {getTrelloConfig, getDefaultBranch} = require('./getConfig')
-const trello = require('../trello-utils')
-const {getNewPullRequestUrlFromRemoteOrigin} = require('../utils')
+const trello = require('../trello')
+const {getNewPullRequestUrlFromRemoteOrigin, open} = require('../utils')
 
 function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/'/g, '%27')
@@ -99,7 +99,7 @@ exports.createPullRequest = async trelloUrl => {
             pullRequestUrl = `${pullRequestUrl}?title=${encodedTitle}&body=${encodedBody}`
           }
 
-          return execa.shell(`open "${pullRequestUrl}"`)
+          return openPage(`"${pullRequestUrl}"`)
         })()
       },
     },

@@ -1,13 +1,8 @@
-const execa = require('execa')
-const git = require('../git-utils')
+const {openPage} = require('../utils')
+const git = require('../git')
 
 const logError = () =>
   console.log("You haven't pushed this project to Github yet!")
-
-const openPage = url => {
-  console.log(url)
-  return execa.shell(`open ${url}`)
-}
 
 exports.openRemote = async () => {
   console.log('Opening Github Repo...')

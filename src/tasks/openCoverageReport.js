@@ -1,6 +1,6 @@
 const path = require('path')
+const open = require('opn')
 const pkgUp = require('pkg-up')
-const execa = require('execa')
 const fs = require('fs')
 
 exports.openCoverageReport = async () => {
@@ -23,5 +23,5 @@ exports.openCoverageReport = async () => {
     )
   }
 
-  return execa('open', [coveragePath])
+  return open(coveragePath)
 }

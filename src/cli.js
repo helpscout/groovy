@@ -6,6 +6,7 @@ const {createBranch} = require('./tasks/createBranch')
 const {createPullRequest} = require('./tasks/createPullRequest')
 const {openCoverageReport} = require('./tasks/openCoverageReport')
 const {configTrello} = require('./tasks/configTrello')
+const {config} = require('./tasks/config')
 const argv = require('yargs').argv
 
 console.log()

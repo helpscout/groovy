@@ -1,7 +1,7 @@
 const fs = require('fs')
-const path = require('path')
+const open = require('open')
 
-const getHomeDir = () =>
+exports.getHomeDir = () =>
   process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
 
 /**
@@ -9,23 +9,11 @@ const getHomeDir = () =>
  * @param {string} filepath  The filepath to read.
  * @returns {string} The contents of the file.
  */
-function readFile(filepath) {
+exports.readFile = filepath => {
   return fs.readFileSync(filepath, 'utf8')
 }
 
-/**
- * Checks to see if the directory exists.
- * @param {string} directory The path of the directory to check.
- * @returns {boolean} The result.
- */
-function dirExists(directory) {
-  return (
-    fs.existsSync(directory) &&
-    fs.statSync(path.resolve(directory)).isDirectory()
-  )
-}
-
-function getGitRepoFromRemoteOrigin(origin) {
+exports.getGitRepoFromRemoteOrigin = origin => {
   const matches = origin.match(
     /(git@github.com:|https:\/\/github.com\/)(.*)(.git)/
   )
@@ -35,28 +23,24 @@ function getGitRepoFromRemoteOrigin(origin) {
   return matches[2]
 }
 
-function getGithubUrlFromRemoteOrigin(origin) {
+exports.getGithubUrlFromRemoteOrigin = origin => {
   const repo = getGitRepoFromRemoteOrigin(origin)
 
   return repo ? `https://github.com/${repo}/` : ''
 }
 
-function getNewPullRequestUrlFromRemoteOrigin({
+exports.getNewPullRequestUrlFromRemoteOrigin = ({
   defaultBranch,
   currentBranch,
   origin,
-}) {
+}) => {
   const repoUrl = getGithubUrlFromRemoteOrigin(origin)
   if (!repoUrl) return ''
 
   return `${repoUrl}compare/${defaultBranch}...${currentBranch}`
 }
 
-module.exports = {
-  readFile,
-  dirExists,
-  getGitRepoFromRemoteOrigin,
-  getGithubUrlFromRemoteOrigin,
-  getNewPullRequestUrlFromRemoteOrigin,
-  getHomeDir,
+exports.openPage = url => {
+  console.log(url)
+  return open(url)
 }

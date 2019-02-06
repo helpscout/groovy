@@ -48,7 +48,7 @@ exports.config = async () => {
     }
 
     console.log()
-    console.log('Awesome! 🤘')
+    console.log('Right on! 🤘')
     console.log('Groovy has been configured.')
   })
 }

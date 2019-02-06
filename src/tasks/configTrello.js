@@ -97,7 +97,7 @@ exports.configTrello = async ({key, token} = {}) => {
     }
 
     console.log()
-    console.log('Awesome! 🤘')
+    console.log('Right on! 🤘')
     console.log('Groovy has set up your Trello API key and token.')
   })
 }
