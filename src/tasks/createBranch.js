@@ -20,7 +20,7 @@ exports.createBranch = async name => {
       message: 'Branch name?',
     })
 
-    branchName = config.value
+    branchName = confirm.value
 
     if (!branchName) {
       console.log('Sorry! New branch was not created.')
