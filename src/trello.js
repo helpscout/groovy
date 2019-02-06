@@ -35,7 +35,7 @@ exports.getCardNameFromUrl = url => {
 }
 
 exports.getCard = async url => {
-  if (!url || url.indexOf('https://trello.com/c/') < 0) return
+  if (!exports.isTrelloCardUrl(url)) return
 
   try {
     const {key, token} = await getTrelloConfig()

@@ -9,16 +9,19 @@ function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/'/g, '%27')
 }
 
-exports.createPullRequest = async trelloUrl => {
+exports.createPullRequest = async (trelloUrl = '') => {
   console.log('Creating Pull Request...')
 
   const {key, token} = await getTrelloConfig()
   const localCachedTrelloCard = await config.getBranchTrelloCard()
+
   let trelloCard
   let trelloCardUrl
 
   if (key && token) {
     if (trello.isTrelloCardUrl(trelloUrl)) {
+      process.exit(0)
+
       trelloCardUrl = trelloUrl
     } else if (localCachedTrelloCard) {
       trelloCardUrl = localCachedTrelloCard

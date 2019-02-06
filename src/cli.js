@@ -80,13 +80,15 @@ program
   .description("Create somethin' new")
   .option('branch <name>', 'Creates a Git branch (Alias: b)')
   .option('pr <url>', 'Creates a pull request on Github (Alias: prs, pulls)')
-  .action((command, ...args) => {
+  .action((command, arg) => {
+    const validArg = typeof arg === 'string' ? arg : undefined
+
     if (['pr', 'prs', 'pulls'].some(w => w === command)) {
-      return createPullRequest(...args)
+      return createPullRequest(validArg)
     }
 
     if (['b', 'branch'].some(w => w === command)) {
-      return createBranch(...args)
+      return createBranch(validArg)
     }
   })
 

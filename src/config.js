@@ -18,10 +18,12 @@ exports.configPath = path.resolve(
   `.${constants.GLOBAL_CONFIG_NAME}rc.json`
 )
 
-exports.get = async () => {
+exports.get = async key => {
   try {
     const {config} = await explorer.search()
-    return config
+    const result = config[key]
+
+    return key ? result : config
   } catch (err) {
     logError()
   }
