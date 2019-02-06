@@ -1,45 +1,10 @@
+const path = require('path')
 const execa = require('execa')
 const parseRepo = require('parse-repo')
-
-const latestTag = () =>
-  execa.stdout('git', ['describe', '--abbrev=0', '--tags'])
-
-const firstCommit = () =>
-  execa.stdout('git', ['rev-list', '--max-parents=0', 'HEAD'])
-
-exports.latestTagOrFirstCommit = async () => {
-  let latest
-  try {
-    // In case a previous tag exists, we use it to compare the current repo status to.
-    latest = await latestTag()
-  } catch (_) {
-    // Otherwise, we fallback to using the first commit for comparison.
-    latest = await firstCommit()
-  }
-
-  return latest
-}
-
-exports.hasUpstream = async () => {
-  const {stdout} = await execa('git', [
-    'status',
-    '--short',
-    '--branch',
-    '--porcelain=2',
-  ])
-  return /^# branch\.upstream [\w\-/]+$/m.test(stdout)
-}
+const {getProjectPath} = require('./utils')
 
 exports.currentBranch = () =>
   execa.stdout('git', ['symbolic-ref', '--short', 'HEAD'])
-
-exports.verifyCurrentBranchIsMaster = async () => {
-  if ((await exports.currentBranch()) !== 'master') {
-    throw new Error(
-      'Not on `master` branch. Use --any-branch to publish anyway.'
-    )
-  }
-}
 
 exports.isWorkingTreeClean = async () => {
   try {
@@ -95,39 +60,7 @@ exports.verifyRemoteIsValid = async () => {
 
 exports.fetch = () => execa('git', ['fetch'])
 
-exports.tagExistsOnRemote = async tagName => {
-  try {
-    const {stdout: revInfo} = await execa('git', [
-      'rev-parse',
-      '--quiet',
-      '--verify',
-      `refs/tags/${tagName}`,
-    ])
-
-    if (revInfo) {
-      return true
-    }
-
-    return false
-  } catch (error) {
-    // Command fails with code 1 and no output if the tag does not exist, even though `--quiet` is provided
-    // https://github.com/sindresorhus/np/pull/73#discussion_r72385685
-    if (error.stdout === '' && error.stderr === '') {
-      return false
-    }
-
-    throw error
-  }
-}
-
-exports.verifyTagDoesNotExistOnRemote = async tagName => {
-  if (await exports.tagExistsOnRemote(tagName)) {
-    throw new Error(`Git tag \`${tagName}\` already exists.`)
-  }
-}
-
-exports.commitLogFromRevision = revision =>
-  execa.stdout('git', ['log', '--format=%s %h', `${revision}..HEAD`])
+exports.newBranch = async name => execa('git', ['checkout', '-b', name])
 
 exports.push = () => execa('git', ['push', '--follow-tags'])
 
@@ -143,6 +76,17 @@ exports.pushCurrentBranch = async branch => {
 exports.remoteOrigin = async () => {
   try {
     return await execa.stdout('git', ['remote', 'get-url', 'origin'])
+  } catch (error) {
+    throw error
+  }
+}
+
+exports.localRepo = async () => {
+  try {
+    const branch = await exports.currentBranch()
+    const projectPath = await getProjectPath()
+
+    return path.resolve(projectPath, branch)
   } catch (error) {
     throw error
   }

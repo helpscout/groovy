@@ -27,6 +27,13 @@ const remapCardToProps = card => {
 exports.isTrelloCardUrl = url =>
   url && url.indexOf('https://trello.com/c/') === 0
 
+exports.getCardNameFromUrl = url => {
+  if (!exports.isTrelloCardUrl(url)) return ''
+  const paths = url.split('/')
+
+  return paths[paths.length - 1]
+}
+
 exports.getCard = async url => {
   if (!url || url.indexOf('https://trello.com/c/') < 0) return
 

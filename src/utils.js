@@ -1,4 +1,6 @@
 const fs = require('fs')
+const path = require('path')
+const pkgUp = require('pkg-up')
 const open = require('opn')
 
 exports.getHomeDir = () =>
@@ -16,4 +18,9 @@ exports.readFile = filepath => {
 exports.openPage = url => {
   console.log(url)
   return open(url, {wait: false})
+}
+
+exports.getProjectPath = async () => {
+  const pkg = await pkgUp()
+  return path.dirname(pkg)
 }

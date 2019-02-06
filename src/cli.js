@@ -6,7 +6,8 @@ const {createBranch} = require('./tasks/createBranch')
 const {createPullRequest} = require('./tasks/createPullRequest')
 const {openCoverageReport} = require('./tasks/openCoverageReport')
 const {configTrello} = require('./tasks/configTrello')
-const {config} = require('./tasks/config')
+const {configGroovy} = require('./tasks/configGroovy')
+const config = require('./config')
 const argv = require('yargs').argv
 
 console.log()
@@ -37,15 +38,19 @@ program
       return configTrello({key, token})
     }
 
-    return config()
+    if (command === 't') {
+      return config.set()
+    }
+
+    return configGroovy()
   })
 
 program
   .command('open')
-  .description('Opens project in a browser')
+  .description("Open somethin' in a browser")
   .alias('o')
   .option('', 'Opens Github repo')
-  .option('coverage', 'Opens coverage report. (Alias: cov, cv)')
+  .option('coverage', 'Opens coverage report (Alias: cov, cv)')
   .option('pr', 'Opens Github pull requests')
   .option('issues', 'Opens Github issues')
   .option('ci', 'Opens Travis CI')
@@ -72,16 +77,16 @@ program
 program
   .command('new')
   .alias('n')
-  .description('Executes a creation task')
-  .option('branch <name>', 'Creates a Git branch. (Alias: b)')
-  .option('pr <url>', 'Creates a pull request on Github. (Alias: prs, pulls)')
-  .action((command, arg) => {
+  .description("Create somethin' new")
+  .option('branch <name>', 'Creates a Git branch (Alias: b)')
+  .option('pr <url>', 'Creates a pull request on Github (Alias: prs, pulls)')
+  .action((command, ...args) => {
     if (['pr', 'prs', 'pulls'].some(w => w === command)) {
-      return createPullRequest(arg)
+      return createPullRequest(...args)
     }
 
     if (['b', 'branch'].some(w => w === command)) {
-      return createBranch(arg)
+      return createBranch(...args)
     }
   })
 

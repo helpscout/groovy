@@ -1,6 +1,7 @@
 const Listr = require('listr')
 const prompts = require('prompts')
 const git = require('../git')
+const config = require('../config')
 const {getTrelloConfig, getDefaultBranch} = require('./getConfig')
 const trello = require('../trello')
 
@@ -12,12 +13,15 @@ exports.createPullRequest = async trelloUrl => {
   console.log('Creating Pull Request...')
 
   const {key, token} = await getTrelloConfig()
+  const localCachedTrelloCard = await config.getBranchTrelloCard()
   let trelloCard
   let trelloCardUrl
 
   if (key && token) {
     if (trello.isTrelloCardUrl(trelloUrl)) {
       trelloCardUrl = trelloUrl
+    } else if (localCachedTrelloCard) {
+      trelloCardUrl = localCachedTrelloCard
     } else {
       const urlPrompt = await prompts({
         type: 'text',

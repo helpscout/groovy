@@ -1,13 +1,12 @@
 const path = require('path')
 const open = require('opn')
-const pkgUp = require('pkg-up')
 const fs = require('fs')
+const {getProjectPath} = require('../utils')
 
 exports.openCoverageReport = async () => {
   console.log('Opening Coverage Report...')
 
-  const pkg = await pkgUp()
-  const projectPath = path.dirname(pkg)
+  const projectPath = await getProjectPath()
   const coveragePath = path.resolve(
     projectPath,
     'coverage',
