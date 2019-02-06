@@ -1,7 +1,6 @@
 const path = require('path')
-const open = require('opn')
 const fs = require('fs')
-const {getProjectPath} = require('../utils')
+const {getProjectPath, openPage} = require('../utils')
 
 exports.openCoverageReport = async () => {
   console.log('Opening Coverage Report...')
@@ -11,16 +10,16 @@ exports.openCoverageReport = async () => {
     projectPath,
     'coverage',
     'lcov-report',
-    'index.html'
+    'index.html',
   )
 
   const fileExists = fs.existsSync(coveragePath)
 
   if (!fileExists) {
     throw new Error(
-      'No coverage report found. Ensure your tests can generate one.'
+      'No coverage report found. Ensure your tests can generate one.',
     )
   }
 
-  return open(coveragePath)
+  return openPage(coveragePath)
 }
