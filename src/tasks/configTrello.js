@@ -1,7 +1,5 @@
-const path = require('path')
 const {get} = require('lodash')
 const prompts = require('prompts')
-const {getHomeDir} = require('../utils')
 const {constants} = require('../constants')
 const globalConfig = require('../config')
 

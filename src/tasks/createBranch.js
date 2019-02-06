@@ -1,3 +1,4 @@
+const prompts = require('prompts')
 const git = require('../git')
 const trello = require('../trello')
 const config = require('../config')
@@ -10,6 +11,21 @@ exports.createBranch = async name => {
   let branchName = name
   if (isTrelloCard) {
     branchName = trello.getCardNameFromUrl(name)
+  }
+
+  if (!branchName) {
+    const confirm = await prompts({
+      type: 'text',
+      name: 'value',
+      message: 'Branch name?',
+    })
+
+    branchName = config.value
+
+    if (!branchName) {
+      console.log('Sorry! New branch was not created.')
+      return
+    }
   }
 
   try {

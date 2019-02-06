@@ -78,7 +78,7 @@ program
   .command('new')
   .alias('n')
   .description("Create somethin' new")
-  .option('branch <name>', 'Creates a Git branch (Alias: b)')
+  .option('<name/url>', 'Creates a Git branch (Alias: b)')
   .option('pr <url>', 'Creates a pull request on Github (Alias: prs, pulls)')
   .action((command, arg) => {
     const validArg = typeof arg === 'string' ? arg : undefined
@@ -87,9 +87,7 @@ program
       return createPullRequest(validArg)
     }
 
-    if (['b', 'branch'].some(w => w === command)) {
-      return createBranch(validArg)
-    }
+    return createBranch(validArg)
   })
 
 program.parse(process.argv)
