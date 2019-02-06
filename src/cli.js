@@ -6,7 +6,6 @@ const {createBranch} = require('./tasks/createBranch')
 const {createPullRequest} = require('./tasks/createPullRequest')
 const {openCoverageReport} = require('./tasks/openCoverageReport')
 const {configTrello} = require('./tasks/configTrello')
-const {test} = require('./tasks/test')
 const argv = require('yargs').argv
 
 console.log()
@@ -14,19 +13,19 @@ console.log()
 // Usage
 program.usage(`
 
-  🔮  Enso (v${pkg.version})
-  enso <command>
+  🕺  Groovy (v${pkg.version})
+  gv <command>
 
   Example:
-  enso open`)
+  gv open`)
 
 program.version(pkg.version)
 
 program
   .command('config')
-  .alias('i')
-  .description('Configures Enso')
-  .option('', 'Configures an .ensorc.json file')
+  .alias('c')
+  .description('Configures Groovy')
+  .option('', 'Configures an .groovyrc.json file')
   .option('trello', 'Sets up Trello integration')
   // .option('--branch', 'Default git branch for configuration')
   .option('--key', 'API key for configuration')
@@ -84,12 +83,6 @@ program
       return createBranch(arg)
     }
   })
-
-program
-  .command('test')
-  .alias('t')
-  .description('Runs tests via npm test')
-  .action(test)
 
 program.parse(process.argv)
 

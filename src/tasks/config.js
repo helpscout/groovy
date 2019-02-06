@@ -10,7 +10,7 @@ const explorer = getConfig()
 
 exports.config = async () => {
   console.log()
-  console.log('Configuring Git for Enso...')
+  console.log('Configuring Git for Groovy...')
   console.log()
 
   const results = await explorer.search()
@@ -25,7 +25,7 @@ exports.config = async () => {
   const {default_branch} = config
 
   if (default_branch) {
-    console.log('Enso has already been configured')
+    console.log('Groovy has already been configured')
     console.log('default_branch:', default_branch)
     console.log()
 
@@ -43,12 +43,12 @@ exports.config = async () => {
 
   fs.writeFile(configPath, JSON.stringify(config), err => {
     if (err) {
-      console.log("Enso wasn't able to be configured.")
+      console.log("Groovy wasn't able to be configured.")
       console.log(err)
     }
 
     console.log()
     console.log('Awesome! 🤘')
-    console.log('Enso has been configured.')
+    console.log('Groovy has been configured.')
   })
 }

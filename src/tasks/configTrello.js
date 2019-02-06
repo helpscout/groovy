@@ -10,9 +10,9 @@ const explorer = getGlobalConfig()
 
 exports.configTrello = async ({key, token} = {}) => {
   console.log()
-  console.log('Configuring Trello for Enso...')
+  console.log('Configuring Trello for Groovy...')
   console.log()
-  console.log('Enso will need your Trello API key and token')
+  console.log('Groovy will need your Trello API key and token')
   console.log('These can be found at: https://trello.com/app-key')
   console.log()
 
@@ -29,7 +29,7 @@ exports.configTrello = async ({key, token} = {}) => {
   const trello_token = config[constants.TRELLO_KEY]
 
   if (trello_key && trello_token) {
-    console.log('Enso has already been configured with Trello')
+    console.log('Groovy has already been configured with Trello')
     console.log('Key:', trello_key)
     console.log('Token:', trello_token)
     console.log()
@@ -50,7 +50,7 @@ exports.configTrello = async ({key, token} = {}) => {
       name: 'value',
       message: 'API Key?',
       validate: value =>
-        !value ? `This is required to use Trello with Enso` : true,
+        !value ? `This is required to use Trello with Groovy` : true,
     })
     finalKey = apiKey.value
   }
@@ -61,13 +61,13 @@ exports.configTrello = async ({key, token} = {}) => {
       name: 'value',
       message: 'API Token?',
       validate: value =>
-        !value ? `This is required to use Trello with Enso` : true,
+        !value ? `This is required to use Trello with Groovy` : true,
     })
     finalToken = apiToken.value
   }
 
   if (!finalKey && !finalToken) {
-    console.log("Enso wasn't able to set up your Trello API key and token.")
+    console.log("Groovy wasn't able to set up your Trello API key and token.")
     return
   }
 
@@ -92,12 +92,12 @@ exports.configTrello = async ({key, token} = {}) => {
 
   fs.writeFile(configPath, JSON.stringify(config), err => {
     if (err) {
-      console.log("Enso wasn't able to set up your Trello API key and token.")
+      console.log("Groovy wasn't able to set up your Trello API key and token.")
       console.log(err)
     }
 
     console.log()
     console.log('Awesome! 🤘')
-    console.log('Enso has set up your Trello API key and token.')
+    console.log('Groovy has set up your Trello API key and token.')
   })
 }
