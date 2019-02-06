@@ -67,7 +67,7 @@ exports.push = () => execa('git', ['push', '--follow-tags'])
 exports.pushCurrentBranch = async branch => {
   try {
     const currentBranch = branch || (await exports.currentBranch())
-    return execa('git', ['push', '-u', 'origin', currentBranch])
+    return await execa('git', ['push', '-u', 'origin', currentBranch])
   } catch (error) {
     throw error
   }
