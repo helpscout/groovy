@@ -5,7 +5,7 @@ exports.openCI = async () => {
   console.log('Opening Travis CI...')
 
   try {
-    const remoteOrigin = await git.getRemoteRepoName()
+    const remoteOrigin = await git.remoteRepo()
     const url = `https://travis-ci.org/${remoteOrigin}`
 
     openPage(url)

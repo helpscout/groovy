@@ -1,8 +1,5 @@
 const execa = require('execa')
-const {
-  getGithubUrlFromRemoteOrigin,
-  getGitRepoFromRemoteOrigin,
-} = require('./utils')
+const parseRepo = require('parse-repo')
 
 const latestTag = () =>
   execa.stdout('git', ['describe', '--abbrev=0', '--tags'])
@@ -134,32 +131,48 @@ exports.commitLogFromRevision = revision =>
 
 exports.push = () => execa('git', ['push', '--follow-tags'])
 
-exports.getRemoteOrigin = async () => {
+exports.pushCurrentBranch = async branch => {
   try {
-    const {stdout: remoteOrigin} = await execa('git', [
-      'remote',
-      'get-url',
-      'origin',
-    ])
-    return remoteOrigin
+    const currentBranch = branch || (await exports.currentBranch())
+    return execa('git', ['push', '-u', 'origin', currentBranch])
   } catch (error) {
     throw error
   }
 }
 
-exports.getRemoteRepoName = async () => {
+exports.remoteOrigin = async () => {
   try {
-    const remoteOrigin = await exports.getRemoteOrigin()
-    return getGitRepoFromRemoteOrigin(remoteOrigin)
+    return await execa.stdout('git', ['remote', 'get-url', 'origin'])
   } catch (error) {
     throw error
   }
 }
 
-exports.getGithubUrl = async () => {
+exports.remoteRepo = async () => {
   try {
-    const remoteOrigin = await exports.getRemoteOrigin()
-    return getGithubUrlFromRemoteOrigin(remoteOrigin)
+    const repo = parseRepo(await exports.remoteOrigin())
+    return repo.repository
+  } catch (error) {
+    throw error
+  }
+}
+
+exports.githubUrl = async () => {
+  try {
+    const repoName = await exports.remoteRepo()
+
+    return `https://github.com/${repoName}/`
+  } catch (error) {
+    throw error
+  }
+}
+
+exports.createPullRequestUrl = async (defaultBranch = 'master') => {
+  try {
+    const currentBranch = await exports.currentBranch()
+    const githubUrl = await exports.githubUrl()
+
+    return `${githubUrl}compare/${defaultBranch}...${currentBranch}`
   } catch (error) {
     throw error
   }

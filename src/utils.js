@@ -13,34 +13,7 @@ exports.readFile = filepath => {
   return fs.readFileSync(filepath, 'utf8')
 }
 
-exports.getGitRepoFromRemoteOrigin = origin => {
-  const matches = origin.match(
-    /(git@github.com:|https:\/\/github.com\/)(.*)(.git)/
-  )
-
-  if (!matches.length) return ''
-
-  return matches[2]
-}
-
-exports.getGithubUrlFromRemoteOrigin = origin => {
-  const repo = getGitRepoFromRemoteOrigin(origin)
-
-  return repo ? `https://github.com/${repo}/` : ''
-}
-
-exports.getNewPullRequestUrlFromRemoteOrigin = ({
-  defaultBranch,
-  currentBranch,
-  origin,
-}) => {
-  const repoUrl = getGithubUrlFromRemoteOrigin(origin)
-  if (!repoUrl) return ''
-
-  return `${repoUrl}compare/${defaultBranch}...${currentBranch}`
-}
-
 exports.openPage = url => {
   console.log(url)
-  return open(url)
+  return open(url, {wait: false})
 }

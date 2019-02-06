@@ -1,11 +1,8 @@
 const Listr = require('listr')
-const execa = require('execa')
-const {get} = require('lodash')
 const prompts = require('prompts')
 const git = require('../git')
 const {getTrelloConfig, getDefaultBranch} = require('./getConfig')
 const trello = require('../trello')
-const {getNewPullRequestUrlFromRemoteOrigin, open} = require('../utils')
 
 function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/'/g, '%27')
@@ -54,37 +51,15 @@ exports.createPullRequest = async trelloUrl => {
     },
     {
       title: 'Pushing to Remote',
-      task: ctx => {
-        return (async () => {
-          const {stdout: remoteOrigin} = await execa('git', [
-            'remote',
-            'get-url',
-            'origin',
-          ])
-          const {stdout: currentBranch} = await execa('git', [
-            'rev-parse',
-            '--abbrev-ref',
-            'HEAD',
-          ])
-
-          ctx.remoteOrigin = remoteOrigin
-          ctx.currentBranch = currentBranch
-
-          return execa('git', ['push', '-u', 'origin', currentBranch])
-        })()
-      },
+      task: () => git.pushCurrentBranch(),
     },
     {
       title: 'Creating Pull Request',
       task: ctx => {
         return (async () => {
-          const {defaultBranch, remoteOrigin, currentBranch} = ctx
+          const {defaultBranch} = ctx
 
-          let pullRequestUrl = getNewPullRequestUrlFromRemoteOrigin({
-            defaultBranch,
-            origin: remoteOrigin,
-            currentBranch,
-          })
+          let pullRequestUrl = git.createPullRequestUrl(defaultBranch)
 
           if (trelloCard) {
             let {name, description} = trelloCard

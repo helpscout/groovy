@@ -8,9 +8,9 @@ exports.openRemote = async () => {
   console.log('Opening Github Repo...')
 
   try {
-    const githubUrl = await git.getGithubUrl()
+    const githubUrl = await git.githubUrl()
 
-    openPage(githubUrl)
+    return openPage(githubUrl)
   } catch (err) {
     logError()
   }
@@ -20,7 +20,7 @@ exports.openIssues = async () => {
   console.log('Opening Github Issues...')
 
   try {
-    const githubUrl = await git.getGithubUrl()
+    const githubUrl = await git.githubUrl()
     const url = `${githubUrl}issues`
 
     openPage(url)
@@ -33,7 +33,7 @@ exports.openPullRequests = async () => {
   console.log('Opening Github Pull Requests...')
 
   try {
-    const githubUrl = await git.getGithubUrl()
+    const githubUrl = await git.githubUrl()
     const url = `${githubUrl}pulls`
 
     openPage(url)
@@ -46,8 +46,8 @@ exports.openCI = async () => {
   console.log('Opening Travis CI...')
 
   try {
-    const remoteOrigin = await git.getRemoteRepoName()
-    const url = `https://travis-ci.org/${remoteOrigin}`
+    const repo = await git.remoteRepo()
+    const url = `https://travis-ci.org/${repo}`
 
     openPage(url)
   } catch (err) {
