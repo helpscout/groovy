@@ -82,12 +82,13 @@ program
   .option('pr <url>', 'Creates a pull request on Github (Alias: prs, pulls)')
   .action((command, arg) => {
     const validArg = typeof arg === 'string' ? arg : undefined
+    const validCmd = typeof command === 'string' ? command : undefined
 
     if (['pr', 'prs', 'pulls'].some(w => w === command)) {
       return createPullRequest(validArg)
     }
 
-    return createBranch(validArg)
+    return createBranch(validCmd || validArg)
   })
 
 program.parse(process.argv)
