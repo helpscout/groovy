@@ -22,7 +22,8 @@ exports.configTrello = async () => {
     getHomeDir(),
     `.${constants.GLOBAL_CONFIG_NAME}rc.json`
   )
-  const {trello_key, trello_token} = config
+  const trello_key = config[constants.TRELLO_KEY]
+  const trello_token = config[constants.TRELLO_KEY]
 
   if (trello_key && trello_token) {
     console.log('Enso has already been configured with Trello')

@@ -1,14 +1,39 @@
 const Listr = require('listr')
 const execa = require('execa')
 const {get} = require('lodash')
-const {getNewPullRequestUrlFromRemoteOrigin} = require('../utils')
+const prompts = require('prompts')
 const git = require('../git-utils')
+const {getTrelloConfig, getDefaultBranch} = require('./getConfig')
+const trello = require('../trello-utils')
+const {getNewPullRequestUrlFromRemoteOrigin} = require('../utils')
 
-const {getConfig} = require('../explorer')
-const explorer = getConfig()
+function fixedEncodeURIComponent(str) {
+  return encodeURIComponent(str).replace(/'/g, '%27')
+}
 
-exports.createPullRequest = () => {
+exports.createPullRequest = async trelloUrl => {
   console.log('Creating Pull Request...')
+
+  const {key, token} = await getTrelloConfig()
+  let trelloCard
+  let trelloCardUrl
+
+  if (key && token) {
+    if (trello.isTrelloCardUrl(trelloUrl)) {
+      trelloCardUrl = trelloUrl
+    } else {
+      const urlPrompt = await prompts({
+        type: 'text',
+        name: 'url',
+        message: 'Trello Card URL',
+        initial: 'Press enter to skip',
+      })
+
+      trelloCardUrl = urlPrompt.url
+    }
+
+    trelloCard = await trello.getCard(trelloCardUrl)
+  }
 
   const tasks = [
     {
@@ -22,18 +47,9 @@ exports.createPullRequest = () => {
     {
       title: 'Getting Config',
       task: ctx => {
-        return explorer.search().then(results => {
-          const config = get(results, 'config')
-          if (!config) return Promise.reject()
-
-          const {default_branch, trello_key, trello_token} = config
-
-          ctx.defaultBranch = default_branch || 'master'
-          ctx.key = trello_key
-          ctx.token = trello_token
-
-          return Promise.resolve()
-        })
+        return (async () => {
+          ctx.defaultBranch = await getDefaultBranch()
+        })()
       },
     },
     {
@@ -63,13 +79,27 @@ exports.createPullRequest = () => {
       task: ctx => {
         return (async () => {
           const {defaultBranch, remoteOrigin, currentBranch} = ctx
-          const pullRequestUrl = getNewPullRequestUrlFromRemoteOrigin({
+
+          let pullRequestUrl = getNewPullRequestUrlFromRemoteOrigin({
             defaultBranch,
             origin: remoteOrigin,
             currentBranch,
           })
 
-          await execa.shell(`open ${pullRequestUrl}`)
+          if (trelloCard) {
+            let {name, description} = trelloCard
+            const encodedTitle = fixedEncodeURIComponent(name)
+
+            if (trelloCardUrl) {
+              description = `**[Trello Card](${trelloCardUrl})**\n\n${description}`
+            }
+
+            const encodedBody = fixedEncodeURIComponent(description)
+
+            pullRequestUrl = `${pullRequestUrl}?title=${encodedTitle}&body=${encodedBody}`
+          }
+
+          return execa.shell(`open "${pullRequestUrl}"`)
         })()
       },
     },

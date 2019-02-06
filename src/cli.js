@@ -68,9 +68,9 @@ program
   .alias('c')
   .description('Executes a creation task')
   .option('pr', 'Creates a pull request on Github')
-  .action(command => {
+  .action((command, url) => {
     if (command === 'pr') {
-      return createPullRequest()
+      return createPullRequest(url)
     }
   })
 
