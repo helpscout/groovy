@@ -1,6 +1,6 @@
 {
   "name": "@helpscout/groovy",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A groovier development workflow experience",
   "main": "src/cli.js",
   "private": false,
