@@ -4,9 +4,9 @@ const pkg = require('../package.json')
 const openGithub = require('./tasks/openGithub')
 const {createPullRequest} = require('./tasks/createPullRequest')
 const {openCoverageReport} = require('./tasks/openCoverageReport')
-const {config} = require('./tasks/config')
 const {configTrello} = require('./tasks/configTrello')
 const {test} = require('./tasks/test')
+const argv = require('yargs').argv
 
 console.log()
 
@@ -23,15 +23,20 @@ program.version(pkg.version)
 
 program
   .command('config')
+  .alias('i')
   .description('Configures Enso')
   .option('', 'Configures an .ensorc.json file')
   .option('trello', 'Sets up Trello integration')
+  // .option('--branch', 'Default git branch for configuration')
+  .option('--key', 'API key for configuration')
+  .option('--token', 'API token for configuration')
   .action(command => {
+    const {key, token} = argv
     if (command === 'trello') {
-      return configTrello()
+      return configTrello({key, token})
     }
 
-    return config()
+    // return config()
   })
 
 program

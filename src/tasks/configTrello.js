@@ -8,13 +8,16 @@ const {constants} = require('../constants')
 const {getGlobalConfig} = require('../explorer')
 const explorer = getGlobalConfig()
 
-exports.configTrello = async () => {
+exports.configTrello = async ({key, token} = {}) => {
   console.log()
   console.log('Configuring Trello for Enso...')
   console.log()
   console.log('Enso will need your Trello API key and token')
   console.log('These can be found at: https://trello.com/app-key')
   console.log()
+
+  let finalKey = key
+  let finalToken = token
 
   const results = await explorer.search()
   const config = get(results, 'config', {})
@@ -41,30 +44,36 @@ exports.configTrello = async () => {
     if (!confirm.value) return
   }
 
-  const apiKey = await prompts({
-    type: 'text',
-    name: 'value',
-    message: 'API Key?',
-    validate: value =>
-      !value ? `This is required to use Trello with Enso` : true,
-  })
+  if (!key) {
+    const apiKey = await prompts({
+      type: 'text',
+      name: 'value',
+      message: 'API Key?',
+      validate: value =>
+        !value ? `This is required to use Trello with Enso` : true,
+    })
+    finalKey = apiKey.value
+  }
 
-  const apiToken = await prompts({
-    type: 'text',
-    name: 'value',
-    message: 'API Token?',
-    validate: value =>
-      !value ? `This is required to use Trello with Enso` : true,
-  })
+  if (!token) {
+    const apiToken = await prompts({
+      type: 'text',
+      name: 'value',
+      message: 'API Token?',
+      validate: value =>
+        !value ? `This is required to use Trello with Enso` : true,
+    })
+    finalToken = apiToken.value
+  }
 
-  if (!apiKey.value && !apiToken.value) {
+  if (!finalKey && !finalToken) {
     console.log("Enso wasn't able to set up your Trello API key and token.")
     return
   }
 
   console.log()
-  console.log('Key:', apiKey.value)
-  console.log('Token:', apiToken.value)
+  console.log('Key:', finalKey)
+  console.log('Token:', finalToken)
   console.log()
 
   const confirm = await prompts({
@@ -78,8 +87,8 @@ exports.configTrello = async () => {
     return
   }
 
-  config[constants.TRELLO_KEY] = apiKey.value
-  config[constants.TRELLO_TOKEN] = apiToken.value
+  config[constants.TRELLO_KEY] = finalKey
+  config[constants.TRELLO_TOKEN] = finalToken
 
   fs.writeFile(configPath, JSON.stringify(config), err => {
     if (err) {
