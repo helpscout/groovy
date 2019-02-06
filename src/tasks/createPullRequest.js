@@ -4,6 +4,7 @@ const git = require('../git')
 const config = require('../config')
 const {getTrelloConfig, getDefaultBranch} = require('./getConfig')
 const trello = require('../trello')
+const {openPage} = require('../utils')
 
 function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/'/g, '%27')
